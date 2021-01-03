@@ -31,11 +31,11 @@ def loop(cs1,cs2,cs3,nodes,p,nodesonplane):
       tmpf /= np.linalg.norm(p[cs2]-p[cs3])
       tmpf /= np.linalg.norm(p[cs]-p[cs3])
       if np.dot(tmpv,norm) > 1e-10 and tmpf < 0.99999999:
-	cs2 = cs3
-	cs3 = cs
-	if cs != cs1:
-	  cslist.append(cs)
-	found = 1
+        cs2 = cs3
+        cs3 = cs
+        if cs != cs1:
+          cslist.append(cs)
+        found = 1
         break
     if not found:
       break
@@ -127,19 +127,19 @@ for a in range(N):
       tmpp = np.linalg.solve([fn[a],fn[b],fn[c]],[d[a],d[b],d[c]])
       if tmpp[0] >= 0.0 and tmpp[0] < 1.0 and \
         tmpp[1] >= 0.0 and tmpp[1] < 1.0 and \
-	tmpp[2] >= 0.0 and tmpp[2] < 1.0:
-	pa.append(tmpp)
-	sa.append([a, b, c])
-	lines[a][b].append(i)
-	lines[b][a].append(i)
-	lines[a][c].append(i)
-	lines[c][a].append(i)
-	lines[b][c].append(i)
-	lines[c][b].append(i)
-	nodesonplane[a].append(i)
-	nodesonplane[b].append(i)
-	nodesonplane[c].append(i)
-	i += 1
+        tmpp[2] >= 0.0 and tmpp[2] < 1.0:
+        pa.append(tmpp)
+        sa.append([a, b, c])
+        lines[a][b].append(i)
+        lines[b][a].append(i)
+        lines[a][c].append(i)
+        lines[c][a].append(i)
+        lines[b][c].append(i)
+        lines[c][b].append(i)
+        nodesonplane[a].append(i)
+        nodesonplane[b].append(i)
+        nodesonplane[c].append(i)
+        i += 1
 p = np.array(pa,dtype=float)
 s = np.array(sa,dtype=float)
 del pa
@@ -162,9 +162,9 @@ for a in range(N):
       for c in range(len(lines[a][b]) - 1):
         i1 = sortlist[c]
         i2 = sortlist[c + 1]
-	nodes[lines[a][b][i1]].append(lines[a][b][i2])
-	nodes[lines[a][b][i2]].append(lines[a][b][i1])
-	links.append([ lines[a][b][i1], lines[a][b][i2] ])
+        nodes[lines[a][b][i1]].append(lines[a][b][i2])
+        nodes[lines[a][b][i2]].append(lines[a][b][i1])
+        links.append([ lines[a][b][i1], lines[a][b][i2] ])
 
 '''
 for a in range(NP):
@@ -183,23 +183,23 @@ for a in range(N):
     tmpf /= np.linalg.norm(p[nn[1]]-p[node])
     if tmpf < -0.99999999:
       if len(nn) == 2:
-	continue
+        continue
       tmpi = nn[1]
       nn[1] = nn[2]
       nn[2] = tmpi
       cslist = loop(nn[0],node,nn[1],nodes,p,nodesonplane[a])
       if len(cslist) > 2:
-	msides.append(cslist)
+        msides.append(cslist)
       cslist = loop(nn[1],node,nn[2],nodes,p,nodesonplane[a])
       if len(cslist) > 2:
-	msides.append(cslist)
+        msides.append(cslist)
       if len(nn) == 4:
-	cslist = loop(nn[2],node,nn[3],nodes,p,nodesonplane[a])
-	if len(cslist) > 2:
-	  msides.append(cslist)
-	cslist = loop(nn[3],node,nn[0],nodes,p,nodesonplane[a])
-	if len(cslist) > 2:
-	  msides.append(cslist)
+        cslist = loop(nn[2],node,nn[3],nodes,p,nodesonplane[a])
+        if len(cslist) > 2:
+          msides.append(cslist)
+        cslist = loop(nn[3],node,nn[0],nodes,p,nodesonplane[a])
+        if len(cslist) > 2:
+          msides.append(cslist)
 
 msides.sort()
 sides = []
@@ -246,78 +246,78 @@ for si in range(len(sides)):
     for a in range(1,len(side)):
       b = (a + 1) % len(side)
       if side[a] < side[b]:
-	bodyedgelist.append([ 0, side[a], side[b] ])
+        bodyedgelist.append([ 0, side[a], side[b] ])
       else:
-	bodyedgelist.append([ 0, side[b], side[a] ])
+        bodyedgelist.append([ 0, side[b], side[a] ])
     nside = sides[f]
     nv2 = np.cross(p[nside[1]] - p[nside[0]],p[nside[2]] - p[nside[0]])
     dotn = np.dot(nv,nv2) / np.linalg.norm(nv) / np.linalg.norm(nv2)
     if abs(dotn) < 0.99999999:
       bodysidelist = [ si, f ]
       for a in range(0,len(nside)):
-	b = (a + 1) % len(nside)
-	if nside[a] < nside[b]:
-	  l = [ nside[a], nside[b] ]
-	else:
-	  l = [ nside[b], nside[a] ]
+        b = (a + 1) % len(nside)
+        if nside[a] < nside[b]:
+          l = [ nside[a], nside[b] ]
+        else:
+          l = [ nside[b], nside[a] ]
         if l != e:
-	  bodyedgelist.append([1, l[0], l[1] ])
+          bodyedgelist.append([1, l[0], l[1] ])
       ei = 0
       eip = 1
       while len(bodyedgelist):
-	found = 0
-	for iei in range(len(bodyedgelist)):
-	  if bodyedgelist[ei][0] == bodyedgelist[iei][0]:
-	    continue
-	  for ieip in range(1,3):
-	    if bodyedgelist[ei][eip] == bodyedgelist[iei][ieip]:
-	      found = 1
-	      break
-	  if found:
-	    break
-	if found:
-	  ei = 0
-	  eip = 1
-	  newfaceset = \
-	    list(set(facesonedges[bodyedgelist[ei][1]][bodyedgelist[ei][2]])\
-	    & set(facesonedges[bodyedgelist[iei][1]][bodyedgelist[iei][2]]))
-	  if len(newfaceset) == 0:
-	    found = 0
-	    break
-	  newface = newfaceset[0]
-	  bodysidelist.append(newface)
-	  nnside = sides[newface]
-	  #print "BE",bodyedgelist
-	  #add new edges and remove closed edges
-	  for a in range(0,len(nnside)):
-	    b = (a + 1) % len(nnside)
-	    if nnside[a] < nnside[b]:
-	      l = [ nnside[a], nnside[b] ]
-	    else:
-	      l = [ nnside[b], nnside[a] ]
-	    add = 1
-	    for b in range(len(bodyedgelist)):
-	      if bodyedgelist[b][1] == l[0] and bodyedgelist[b][2] == l[1]:
-	        bodyedgelist.pop(b)
-		add = 0
-		break
-	    if add:
-	      bodyedgelist.append([ len(bodysidelist), l[0], l[1] ])
-	  '''
-	  print found,ei,eip,iei,ieip,bodyedgelist
-	  print "BBB",bodyedgelist[ei], bodyedgelist[iei]
-	  print "F1",facesonedges[bodyedgelist[ei][1]][bodyedgelist[ei][2]]
-	  print "F2",facesonedges[bodyedgelist[iei][1]][bodyedgelist[iei][2]]
-	  print "SIDES",newface,side,nside,nnside,bodysidelist
-	  print "BE",bodyedgelist
-	  '''
-	else:
-	  eip += 1
-	  if eip == 3:
-	    eip = 1
-	    ei += 1
-	    if ei >= len(bodysidelist):
-	      break
+        found = 0
+        for iei in range(len(bodyedgelist)):
+          if bodyedgelist[ei][0] == bodyedgelist[iei][0]:
+            continue
+          for ieip in range(1,3):
+            if bodyedgelist[ei][eip] == bodyedgelist[iei][ieip]:
+              found = 1
+              break
+          if found:
+            break
+        if found:
+          ei = 0
+          eip = 1
+          newfaceset = \
+            list(set(facesonedges[bodyedgelist[ei][1]][bodyedgelist[ei][2]])\
+            & set(facesonedges[bodyedgelist[iei][1]][bodyedgelist[iei][2]]))
+          if len(newfaceset) == 0:
+            found = 0
+            break
+          newface = newfaceset[0]
+          bodysidelist.append(newface)
+          nnside = sides[newface]
+          #print "BE",bodyedgelist
+          #add new edges and remove closed edges
+          for a in range(0,len(nnside)):
+            b = (a + 1) % len(nnside)
+            if nnside[a] < nnside[b]:
+              l = [ nnside[a], nnside[b] ]
+            else:
+              l = [ nnside[b], nnside[a] ]
+            add = 1
+            for b in range(len(bodyedgelist)):
+              if bodyedgelist[b][1] == l[0] and bodyedgelist[b][2] == l[1]:
+                bodyedgelist.pop(b)
+                add = 0
+                break
+            if add:
+              bodyedgelist.append([ len(bodysidelist), l[0], l[1] ])
+          '''
+          print found,ei,eip,iei,ieip,bodyedgelist
+          print "BBB",bodyedgelist[ei], bodyedgelist[iei]
+          print "F1",facesonedges[bodyedgelist[ei][1]][bodyedgelist[ei][2]]
+          print "F2",facesonedges[bodyedgelist[iei][1]][bodyedgelist[iei][2]]
+          print "SIDES",newface,side,nside,nnside,bodysidelist
+          print "BE",bodyedgelist
+          '''
+        else:
+          eip += 1
+          if eip == 3:
+            eip = 1
+            ei += 1
+            if ei >= len(bodysidelist):
+              break
     if len(bodyedgelist) == 0:
       rbodies.append(sorted(bodysidelist))
 
@@ -345,12 +345,12 @@ if outtype == 0:
     for i in range(4):
       xxi = 0
       for b in range(3):
-	if b == pdir:
-	  q[i][b] += d[a] / fn[a][pdir]
-	else:
-	  q[i][b] = xx[i][xxi]
-	  q[i][pdir] -= xx[i][xxi] * fn[a][b] / fn[a][pdir]
-	  xxi += 1
+        if b == pdir:
+          q[i][b] += d[a] / fn[a][pdir]
+        else:
+          q[i][b] = xx[i][xxi]
+          q[i][pdir] -= xx[i][xxi] * fn[a][b] / fn[a][pdir]
+          xxi += 1
     q *= 2
     q -= [1.0,1.0,1.0]
     print "%f %f %f" % (q[0][0]-q[1][0], q[0][1]-q[1][1], q[0][2]-q[1][2])
@@ -389,17 +389,17 @@ if outtype == 0:
     for si in body:
       side = sides[si]
       for a in range(1,len(side)-1):
-	print tri_str(p[side[0]],p[side[a]],p[side[a+1]])
+        print tri_str(p[side[0]],p[side[a]],p[side[a+1]])
     print "i 99 i 4278190080 i %d" % (numedge)
     tmpn = 0
     for si in body:
       side = sides[si]
       for a in range(len(side)):
-	pa = p[side[a]]
-	pb = p[side[(a+1) % len(side)]]
-	tmpn += 1
-	print 0.02,np.linalg.norm(pa-pb),pa[0],pa[1],pa[2]
-	print direction(pb-pa)
+        pa = p[side[a]]
+        pb = p[side[(a+1) % len(side)]]
+        tmpn += 1
+        print 0.02,np.linalg.norm(pa-pb),pa[0],pa[1],pa[2]
+        print direction(pb-pa)
     if tmpn != numedge:
       sys.stderr.write("missmatch %d %d\n" % (tmpn,numedge))
     i += 1
